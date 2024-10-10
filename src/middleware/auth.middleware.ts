@@ -1,23 +1,36 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "../config/constants";
+import dotenv from "dotenv";
+import { CustomRequest, User } from "../types/context";
+
+dotenv.config();
+
+const JWT_SECRET: any = process.env.JWT_SECRET;
 
 export const authMiddleware = (
-  req: Request,
+  req: CustomRequest,
   res: Response,
   next: NextFunction
 ) => {
   const authHeader = req.headers.authorization;
 
-  if (authHeader) {
-    const token = authHeader.split(" ")[1];
+  if (!authHeader) {
+    next();
+    return;
+  }
 
-    try {
-      const user = jwt.verify(token, JWT_SECRET);
-      (req as any).user = user;
-    } catch (err) {
-      console.error("Invalid token:", err);
-    }
+  const [bearer, token] = authHeader.split(" ");
+
+  if (bearer !== "Bearer" || !token) {
+    next();
+    return;
+  }
+
+  try {
+    const user = jwt.verify(token, JWT_SECRET) as User;
+    req.user = user;
+  } catch (err) {
+    console.error("Invalid token:", err);
   }
 
   next();

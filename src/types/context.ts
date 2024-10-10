@@ -8,7 +8,15 @@ declare global {
   }
 }
 
+export interface User {
+  userId: string;
+  role: string;
+}
+
+export interface CustomRequest extends Request {
+  user?: User;
+}
 export interface Context {
-  req: Request;
-  user?: any;
+  req: CustomRequest;
+  user?: User;
 }

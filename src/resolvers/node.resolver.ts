@@ -1,4 +1,12 @@
-import { Resolver, Query, Arg, FieldResolver, Root, ID } from "type-graphql";
+import {
+  Resolver,
+  Query,
+  Arg,
+  FieldResolver,
+  Root,
+  ID,
+  Authorized,
+} from "type-graphql";
 import { Service } from "typedi";
 import { NodeObject, Action, Response, Trigger } from "../types";
 import { NodeService } from "../services/node.service";
@@ -8,6 +16,7 @@ import { NodeService } from "../services/node.service";
 export class NodeResolver {
   constructor(private nodeService: NodeService) {}
 
+  @Authorized()
   @Query(() => NodeObject, { nullable: true })
   async node(
     @Arg("nodeId", () => ID) nodeId: string

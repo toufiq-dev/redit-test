@@ -6,11 +6,20 @@ import { Container } from "typedi";
 import { authMiddleware } from "./middleware/auth.middleware";
 import { resolvers } from "./resolvers";
 import { CustomAuthChecker } from "./utils/auth-checker";
-import { PORT } from "./config/constants";
-import { Application } from "express";
+import { Context, CustomRequest } from "./types/context";
+import dotenv from "dotenv";
+import { generateToken } from "./utils/generate-token";
+
+const token = generateToken();
+console.log(token);
+
+dotenv.config();
+
+const PORT = process.env.PORT || 4000;
 
 async function bootstrap() {
-  const app: Application = express();
+  // Remove the explicit Application type
+  const app = express();
   app.use(authMiddleware);
 
   const schema = await buildSchema({
@@ -21,17 +30,18 @@ async function bootstrap() {
 
   const server = new ApolloServer({
     schema,
-    context: ({ req }) => {
+    context: ({ req }): Context => {
+      const customReq = req as CustomRequest;
       return {
-        req,
-        user: req.user,
+        req: customReq,
+        user: customReq.user,
       };
     },
   });
 
   await server.start();
 
-  // Explicitly type the app parameter
+  // Use type assertion here
   server.applyMiddleware({ app: app as any });
 
   app.listen(PORT, () => {

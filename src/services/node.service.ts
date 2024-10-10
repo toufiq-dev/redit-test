@@ -38,4 +38,9 @@ export class NodeService {
     const triggers = await this.dataService.getTriggers();
     return triggers.find((trigger) => trigger._id === id) || null;
   }
+
+  async findByCompositeId(compositeId: string): Promise<NodeObject | null> {
+    const nodes = await this.dataService.getNodes();
+    return nodes.find((node) => node.compositeId === compositeId) || null;
+  }
 }
