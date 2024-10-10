@@ -6,15 +6,26 @@ import {
   Root,
   ID,
   Authorized,
+  Int,
 } from "type-graphql";
 import { Service } from "typedi";
-import { NodeObject, Action, Response, Trigger } from "../types";
+import {
+  NodeObject,
+  Action,
+  Response,
+  Trigger,
+  ResourceTemplate,
+} from "../types";
 import { NodeService } from "../services/node.service";
+import { DataService } from "../services/data.service";
 
 @Service()
 @Resolver(() => NodeObject)
 export class NodeResolver {
-  constructor(private nodeService: NodeService) {}
+  constructor(
+    private nodeService: NodeService,
+    private dataService: DataService
+  ) {}
 
   @Authorized()
   @Query(() => NodeObject, { nullable: true })
@@ -22,6 +33,23 @@ export class NodeResolver {
     @Arg("nodeId", () => ID) nodeId: string
   ): Promise<NodeObject | null> {
     return this.nodeService.findById(nodeId);
+  }
+
+  @Authorized()
+  @Query(() => [NodeObject])
+  async nodes(
+    @Arg("limit", () => Int, { nullable: true }) limit?: number,
+    @Arg("offset", () => Int, { nullable: true }) offset?: number
+  ): Promise<NodeObject[]> {
+    return this.nodeService.findAll(limit, offset);
+  }
+
+  @Authorized()
+  @Query(() => NodeObject, { nullable: true })
+  async nodeByCompositeId(
+    @Arg("compositeId", () => String) compositeId: string
+  ): Promise<NodeObject | null> {
+    return this.nodeService.findByCompositeId(compositeId);
   }
 
   @FieldResolver(() => [Action], { nullable: true })

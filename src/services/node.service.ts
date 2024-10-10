@@ -8,15 +8,15 @@ export class NodeService {
 
   async findById(id: string): Promise<NodeObject | null> {
     const nodes = await this.dataService.getNodes();
-    const node = nodes.find((node) => node._id === id);
+    return nodes.find((node) => node._id === id) || null;
+  }
 
-    if (!node) return null;
-
-    return {
-      ...node,
-      actionIds: node.actions || [],
-      responseIds: node.responses || [],
-    };
+  async findAll(limit?: number, offset?: number): Promise<NodeObject[]> {
+    const nodes = await this.dataService.getNodes();
+    if (limit !== undefined && offset !== undefined) {
+      return nodes.slice(offset, offset + limit);
+    }
+    return nodes;
   }
 
   async findByIds(ids: string[]): Promise<NodeObject[]> {
