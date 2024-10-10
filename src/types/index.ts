@@ -168,14 +168,14 @@ export class NodeObject {
   @Field(() => ID, { nullable: true })
   triggerId?: string;
 
-  @Field(() => [Response], { nullable: true })
-  responses?: Response[];
+  @Field(() => [ID], { nullable: true })
+  responses?: string[];
 
   @Field(() => [ID], { nullable: true })
   responseIds?: string[];
 
-  @Field(() => [Action], { nullable: true })
-  actions?: Action[];
+  @Field(() => [ID], { nullable: true })
+  actions?: string[];
 
   @Field(() => [ID], { nullable: true })
   actionIds?: string[];
@@ -191,4 +191,10 @@ export class NodeObject {
 
   @Field({ nullable: true })
   colour?: string;
+
+  @Field(() => [Action], { nullable: true })
+  resolvedActions?: Action[];
+
+  @Field(() => [Response], { nullable: true })
+  resolvedResponses?: Response[];
 }
