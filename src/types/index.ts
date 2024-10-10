@@ -153,8 +153,8 @@ export class NodeObject {
   @Field({ nullable: true })
   description?: string;
 
-  @Field(() => [NodeObject], { nullable: true })
-  parents?: NodeObject[];
+  @Field(() => [ID], { nullable: true })
+  parents?: string[];
 
   @Field(() => [ID], { nullable: true })
   parentIds?: string[];
@@ -162,8 +162,8 @@ export class NodeObject {
   @Field(() => Boolean)
   root: boolean;
 
-  @Field(() => Trigger, { nullable: true })
-  trigger?: Trigger;
+  @Field(() => ID, { nullable: true })
+  trigger?: string;
 
   @Field(() => ID, { nullable: true })
   triggerId?: string;
@@ -180,6 +180,12 @@ export class NodeObject {
   @Field(() => [ID], { nullable: true })
   actionIds?: string[];
 
+  @Field(() => [ID], { nullable: true })
+  preActions?: string[];
+
+  @Field(() => [ID], { nullable: true })
+  postActions?: string[];
+
   @Field()
   priority: number;
 
@@ -192,9 +198,21 @@ export class NodeObject {
   @Field({ nullable: true })
   colour?: string;
 
+  @Field(() => Trigger, { nullable: true })
+  resolvedTrigger?: Trigger;
+
   @Field(() => [Action], { nullable: true })
   resolvedActions?: Action[];
 
+  @Field(() => [Action], { nullable: true })
+  resolvedPreActions?: Action[];
+
+  @Field(() => [Action], { nullable: true })
+  resolvedPostActions?: Action[];
+
   @Field(() => [Response], { nullable: true })
   resolvedResponses?: Response[];
+
+  @Field(() => [NodeObject], { nullable: true })
+  resolvedParents?: NodeObject[];
 }
