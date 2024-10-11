@@ -69,9 +69,9 @@ export class NodeResolver {
     @Arg("compositeId", () => String) compositeId: string
   ): Promise<NodeObject[]> {
     const allNodes = await this.dataService.getNodes();
-    const parent = allNodes.find((node) => node.compositeId === compositeId);
-    if (!parent) return [];
-    return allNodes.filter((node) => node.parents?.includes(parent._id));
+    return allNodes.filter(
+      (node) => node.parents && node.parents.includes(compositeId)
+    );
   }
 
   @FieldResolver(() => [Action], { nullable: true })

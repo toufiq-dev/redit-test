@@ -54,3 +54,27 @@ The project structure is as follows:
 - `responses(limit: Int, offset: Int): [Response!]!`: Fetch responses with optional pagination
 - `nodeByCompositeId(compositeId: String!): NodeObject`: Fetch a node by its composite ID
 - `nodesByParentCompositeId(compositeId: String!): [NodeObject!]!`: Fetch child nodes by parent's composite ID
+
+## Example Queries
+
+### Fetch a node by ID
+
+```graphql
+query {
+  node(nodeId: "6296be3470a0c1052f89cccb") {
+    _id
+    name
+    description
+    compositeId
+  }
+}
+```
+```graphql
+query {
+  nodesByParentCompositeId(compositeId: "XTpR0HkNpxWjJ6eG") {
+    _id
+    name
+    compositeId
+  }
+}
+```

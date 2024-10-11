@@ -6,7 +6,7 @@ export class ResourceTemplate {
   @Field(() => ID)
   _id: string;
 
-  @Field()
+  @Field({ nullable: true })
   createdAt: number;
 
   @Field({ nullable: true })
@@ -186,7 +186,7 @@ export class NodeObject {
   @Field(() => [ID], { nullable: true })
   postActions?: string[];
 
-  @Field()
+  @Field({ nullable: true })
   priority: number;
 
   @Field(() => ID, { nullable: true })
