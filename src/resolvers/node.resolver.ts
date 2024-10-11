@@ -9,13 +9,7 @@ import {
   Int,
 } from "type-graphql";
 import { Service } from "typedi";
-import {
-  NodeObject,
-  Action,
-  Response,
-  Trigger,
-  ResourceTemplate,
-} from "../types";
+import { NodeObject, Action, Response, Trigger } from "../types";
 import { NodeService } from "../services/node.service";
 import { DataService } from "../services/data.service";
 
@@ -36,12 +30,29 @@ export class NodeResolver {
   }
 
   @Authorized()
-  @Query(() => [NodeObject])
-  async nodes(
+  @Query(() => [Action])
+  async actions(
     @Arg("limit", () => Int, { nullable: true }) limit?: number,
     @Arg("offset", () => Int, { nullable: true }) offset?: number
-  ): Promise<NodeObject[]> {
-    return this.nodeService.findAll(limit, offset);
+  ): Promise<Action[]> {
+    const actions = await this.dataService.getActions();
+    if (limit !== undefined && offset !== undefined) {
+      return actions.slice(offset, offset + limit);
+    }
+    return actions;
+  }
+
+  @Authorized()
+  @Query(() => [Response])
+  async responses(
+    @Arg("limit", () => Int, { nullable: true }) limit?: number,
+    @Arg("offset", () => Int, { nullable: true }) offset?: number
+  ): Promise<Response[]> {
+    const responses = await this.dataService.getResponses();
+    if (limit !== undefined && offset !== undefined) {
+      return responses.slice(offset, offset + limit);
+    }
+    return responses;
   }
 
   @Authorized()
@@ -50,6 +61,17 @@ export class NodeResolver {
     @Arg("compositeId", () => String) compositeId: string
   ): Promise<NodeObject | null> {
     return this.nodeService.findByCompositeId(compositeId);
+  }
+
+  @Authorized()
+  @Query(() => [NodeObject])
+  async nodesByParentCompositeId(
+    @Arg("compositeId", () => String) compositeId: string
+  ): Promise<NodeObject[]> {
+    const allNodes = await this.dataService.getNodes();
+    const parent = allNodes.find((node) => node.compositeId === compositeId);
+    if (!parent) return [];
+    return allNodes.filter((node) => node.parents?.includes(parent._id));
   }
 
   @FieldResolver(() => [Action], { nullable: true })

@@ -18,7 +18,6 @@ dotenv.config();
 const PORT = process.env.PORT || 4000;
 
 async function bootstrap() {
-  // Remove the explicit Application type
   const app = express();
   app.use(authMiddleware);
 
@@ -41,7 +40,6 @@ async function bootstrap() {
 
   await server.start();
 
-  // Use type assertion here
   server.applyMiddleware({ app: app as any });
 
   app.listen(PORT, () => {

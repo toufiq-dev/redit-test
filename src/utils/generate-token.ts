@@ -6,9 +6,11 @@ dotenv.config();
 const JWT_SECRET: any = process.env.JWT_SECRET;
 
 export const generateToken = () => {
-  const token = jwt.sign({ userId: "123", role: "user" }, JWT_SECRET, {
-    expiresIn: "1d",
-  });
-  console.log(token);
-  return token;
+  // FIXED_TEST_TOKEN from only for facilitating test purpose
+  return (
+    process.env.FIXED_TEST_TOKEN ||
+    jwt.sign({ userId: "123", role: "user" }, JWT_SECRET, {
+      expiresIn: "1d",
+    })
+  );
 };

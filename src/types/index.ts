@@ -96,8 +96,8 @@ export class ResponseVariation {
 
 @ObjectType()
 export class ResponseLocaleGroup {
-  @Field(() => ID)
-  localeGroupId: string;
+  @Field()
+  localeGroup: string;
 
   @Field(() => [ResponseVariation])
   variations: ResponseVariation[];
